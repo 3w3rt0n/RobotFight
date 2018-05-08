@@ -9,8 +9,6 @@ WiFiUDP udp;//Cria um objeto da classe UDP.
 
 #define PORTA 8000
 
-String req;
-
 //D3 = GPIO00
 //D4 = GPIO02 
 //D5 = GPIO14 ~
@@ -18,21 +16,27 @@ String req;
 //D7 = GPIO13 ERROR
 //D8 = GPIO15 ~
 
-#define motorDireito   4    //D5 = GPIO14
-#define motorEsquerdo  3    //D6 = GPIO12
-#define motorArmar     5    //D8 = GPIO15
+#define motorDireitoA   4     //D4 = GPIO02 UP
+#define motorDireitoB   3     //D3 = GPIO00 UP
+#define motorEsquerdoA  5     //D5 = GPIO14
+#define motorEsquerdoB  2     //D2 = GPIO04
+#define motorArmar      0     //D0 = GPIO16
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   Serial.println();
   
-  pinMode(motorDireito, OUTPUT);
-  pinMode(motorEsquerdo, OUTPUT);
+  pinMode(motorDireitoA, OUTPUT);
+  pinMode(motorDireitoB, OUTPUT);
+  pinMode(motorEsquerdoA, OUTPUT);
+  pinMode(motorEsquerdoB, OUTPUT);
   pinMode(motorArmar, OUTPUT);
 
-  analogWrite(motorDireito, 0); //ok
-  analogWrite(motorEsquerdo, 0);//ok
+  analogWrite(motorDireitoA, 0); //ok
+  analogWrite(motorDireitoB, 0); //ok
+  analogWrite(motorEsquerdoA, 0);//ok
+  analogWrite(motorEsquerdoB, 0);//ok
   digitalWrite(motorArmar, 0);  //ok
 
   WiFi.mode(WIFI_AP);
@@ -51,14 +55,51 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   if(udp.parsePacket() > 0){
-    req = "";
     while(udp.available() > 0){
       char c = udp.read();
-      req += c;
-    }
+      Serial.print("Requisicao: ");
+      Serial.println(c);
 
-    Serial.print("Requisicao: ");
-    Serial.println(req);
+      switch(c){
+        //Robo andar para frente
+        case '1':   analogWrite(motorDireitoA, 0);
+                  analogWrite(motorDireitoB, 1024);
+                  analogWrite(motorEsquerdoB, 0);
+                  analogWrite(motorEsquerdoA, 1024);
+                  Serial.println("Robo para frente.");
+                  break;
+        //Robo andar para traz
+        case '2':   analogWrite(motorDireitoB, 0);
+                  analogWrite(motorDireitoA, 1024);
+                  analogWrite(motorEsquerdoA, 0);
+                  analogWrite(motorEsquerdoB, 1024);
+                  Serial.println("Robo para traz.");
+                  break;
+        //Robo para direita
+        case '3':   analogWrite(motorDireitoB, 0);
+                  analogWrite(motorDireitoA, 1024);
+                  analogWrite(motorEsquerdoB, 0);
+                  analogWrite(motorEsquerdoA, 1024);
+                  Serial.println("Robo para direita.");
+                  break;
+        //Robo para esquerda
+        case '4':   analogWrite(motorDireitoA, 0);
+                  analogWrite(motorDireitoB, 1024);
+                  analogWrite(motorEsquerdoA, 0);
+                  analogWrite(motorEsquerdoB, 1024);
+                  Serial.println("Robo para esquerda.");
+                  break;  
+        //Robo parado
+        case '5':   analogWrite(motorDireitoA, 0);
+                  analogWrite(motorDireitoB, 0);
+                  analogWrite(motorEsquerdoA, 0);
+                  analogWrite(motorEsquerdoB, 0);
+                  Serial.println("Robo parado.");
+                  break;        
+        
+      }
+      
+    } 
 
     delay(5);
   }
