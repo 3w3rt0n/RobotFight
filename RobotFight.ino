@@ -9,18 +9,14 @@ WiFiUDP udp;//Cria um objeto da classe UDP.
 
 #define PORTA 8000
 
-//D3 = GPIO00
-//D4 = GPIO02 
-//D5 = GPIO14 ~
-//D6 = GPIO12 ~
-//D7 = GPIO13 ERROR
-//D8 = GPIO15 ~
-
-#define motorDireitoA   4     //D4 = GPIO02 UP
-#define motorDireitoB   3     //D3 = GPIO00 UP
-#define motorEsquerdoA  5     //D5 = GPIO14
-#define motorEsquerdoB  2     //D2 = GPIO04
-#define motorArmar      0     //D0 = GPIO16
+                            //arduino nodemcu
+#define motorDireitoA   5     //D5    = d1  
+#define motorDireitoB   4     //D4    = d2   Ponte direita
+//---------------------------------------------------------
+#define motorEsquerdoA  0     //D0    = d3  
+#define motorEsquerdoB  2     //d2    = d4   Ponte esquerda
+//---------------------------------------------------------
+#define motorArmar      13    //D13   = d7 - armar
 
 void setup() {
   // put your setup code here, to run once:
@@ -63,39 +59,45 @@ void loop() {
       switch(c){
         //Robo andar para frente
         case '1':   analogWrite(motorDireitoA, 0);
-                  analogWrite(motorDireitoB, 1024);
-                  analogWrite(motorEsquerdoB, 0);
-                  analogWrite(motorEsquerdoA, 1024);
-                  Serial.println("Robo para frente.");
-                  break;
+                    analogWrite(motorDireitoB, 1024);
+                    analogWrite(motorEsquerdoB, 0);
+                    analogWrite(motorEsquerdoA, 1024);
+                    Serial.println("Robo para frente.");
+                    break;
         //Robo andar para traz
         case '2':   analogWrite(motorDireitoB, 0);
-                  analogWrite(motorDireitoA, 1024);
-                  analogWrite(motorEsquerdoA, 0);
-                  analogWrite(motorEsquerdoB, 1024);
-                  Serial.println("Robo para traz.");
-                  break;
+                    analogWrite(motorDireitoA, 1024);
+                    analogWrite(motorEsquerdoA, 0);
+                    analogWrite(motorEsquerdoB, 1024);
+                    Serial.println("Robo para traz.");
+                    break;
         //Robo para direita
         case '3':   analogWrite(motorDireitoB, 0);
-                  analogWrite(motorDireitoA, 1024);
-                  analogWrite(motorEsquerdoB, 0);
-                  analogWrite(motorEsquerdoA, 1024);
-                  Serial.println("Robo para direita.");
-                  break;
+                    analogWrite(motorDireitoA, 1024);
+                    analogWrite(motorEsquerdoB, 0);
+                    analogWrite(motorEsquerdoA, 1024);
+                    Serial.println("Robo para direita.");
+                    break;
         //Robo para esquerda
         case '4':   analogWrite(motorDireitoA, 0);
-                  analogWrite(motorDireitoB, 1024);
-                  analogWrite(motorEsquerdoA, 0);
-                  analogWrite(motorEsquerdoB, 1024);
-                  Serial.println("Robo para esquerda.");
-                  break;  
+                    analogWrite(motorDireitoB, 1024);
+                    analogWrite(motorEsquerdoA, 0);
+                    analogWrite(motorEsquerdoB, 1024);
+                    Serial.println("Robo para esquerda.");
+                    break;  
         //Robo parado
         case '5':   analogWrite(motorDireitoA, 0);
-                  analogWrite(motorDireitoB, 0);
-                  analogWrite(motorEsquerdoA, 0);
-                  analogWrite(motorEsquerdoB, 0);
-                  Serial.println("Robo parado.");
-                  break;        
+                    analogWrite(motorDireitoB, 0);
+                    analogWrite(motorEsquerdoA, 0);
+                    analogWrite(motorEsquerdoB, 0);
+                    Serial.println("Robo parado.");
+                    break;  
+        //Ativar armar
+        case '6':   digitalWrite(motorArmar, HIGH);
+                    break;
+        //Desativar armar
+        case '7':   digitalWrite(motorArmar, LOW);
+                    break;      
         
       }
       
